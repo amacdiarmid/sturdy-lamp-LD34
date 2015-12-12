@@ -22,6 +22,7 @@ public class CreepAI : MonoBehaviour {
     public float damage;
     public float range;
     public float hp;
+    public float rateOfFire;
 
     // Use this for initialization
     void Start ()
@@ -89,6 +90,11 @@ public class CreepAI : MonoBehaviour {
             }
            // transform.position = Vector3.Lerp(path[curMarkerPassed].postition, path[curMarkerPassed + 1].postition, JourneyDelta);
             transform.position = getPoint(JourneyDelta, curMarkerPassed);
+        }
+        else
+        {
+            //do killing stuff7
+            //jim put stuff here 
         }
     }
 
