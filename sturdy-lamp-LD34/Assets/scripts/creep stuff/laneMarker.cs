@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class laneMarker : MonoBehaviour {
 
     public List<pathMarker> path;
-    public List<pathMarker> revPath;
+    [HideInInspector] public List<pathMarker> revPath;
     public List<pathMarker>[] paths = new List<pathMarker>[2];
 
     public float totalDis;
