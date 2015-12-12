@@ -29,15 +29,14 @@ public class laneMarker : MonoBehaviour {
 	void Update () {
         if (creepList[0].First != null && creepList[1].First != null)
         {
-            if ((creepList[0].First.transform.position-creepList[1].First.transform.position).sqrMagnitude < creepList[0].First.range)
-            {
-                creepList[0].First.move = false;
-            }
-            if ((creepList[0].First.transform.position - creepList[1].First.transform.position).sqrMagnitude < creepList[1].First.range)
-            {
-                creepList[1].First.move = false;
-            }
-
+            //if ((creepList[0].First.transform.position - creepList[1].First.transform.position).sqrMagnitude < creepList[0].First.range)
+            //{
+            //    creepList[0].First.move = false;
+            //}
+            //if ((creepList[0].First.transform.position - creepList[1].First.transform.position).sqrMagnitude < creepList[1].First.range)
+            //{
+            //    creepList[1].First.move = false;
+            //}
         }
     }
 }

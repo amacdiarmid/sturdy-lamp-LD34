@@ -23,10 +23,17 @@ public class CreepAI : MonoBehaviour {
     public float range;
     public float hp;
     public float rateOfFire;
+    float FireTimer = 0.5f;
+    float otherTimer = -1f;
+    Transform Trnsfrm;
+    public int EnemyMask;
+    public int side;
+
 
     // Use this for initialization
     void Start ()
     {
+        Trnsfrm = transform;
         //startTime = Time.time;
         JourneyDelta = 0;
         //Debug.Log(path[curMarkerPassed].postition + " " + path[curMarkerPassed + 1].postition);
@@ -67,8 +74,42 @@ public class CreepAI : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        if (move == true)
+        if ((FireTimer -= Time.deltaTime) < 0)
         {
+            CreepAI target = null; float mnD = float.MaxValue;
+            foreach (var col in Physics2D.OverlapCircleAll(Trnsfrm.position, range, EnemyMask))
+            {
+
+                float d = (col.transform.position - Trnsfrm.position).sqrMagnitude;
+                if (d < mnD)
+                {
+                    d = mnD;
+                    target = col.GetComponent<CreepAI>();
+                }
+            }
+            if (target != null)
+            {
+                //target->die mutha fucker
+                Debug.Log("pew");
+                target.hp -= damage;
+                FireTimer += rateOfFire;
+                otherTimer = rateOfFire + 0.5f;
+            }
+            else
+            {
+                FireTimer += 0.15f;
+            }
+        }
+        if ((otherTimer -= Time.deltaTime) < 0)
+        {
+            if (Next != null)
+            {
+                if (curMarkerPassed > Next.curMarkerPassed || (curMarkerPassed == Next.curMarkerPassed && JourneyDelta > Next.JourneyDelta))
+                {
+                    lane.creepList[side].swap(this, Next);
+                }
+            }
+            //do killing stuff7
             distance = Vector3.Distance(transform.position, path[curMarkerPassed + 1].transform.position);
             for (int i = curMarkerPassed + 1; i < path.Count; i++)
             {
@@ -79,8 +120,8 @@ public class CreepAI : MonoBehaviour {
             //float fracJourney = distCovered / journeyLength;
             //transform.position = Vector3.Lerp(path[curMarkerPassed].postition, path[curMarkerPassed + 1].postition, fracJourney);
             //Debug.Log(fracJourney);
-            JourneyDelta += Time.deltaTime*speed / journeyLength;
-            if(JourneyDelta >= 1)
+            JourneyDelta += Time.deltaTime * speed / journeyLength;
+            if (JourneyDelta >= 1)
             {
                 Debug.Log("next pos" + journeyLength);
                 curMarkerPassed++;
@@ -88,13 +129,12 @@ public class CreepAI : MonoBehaviour {
                 JourneyDelta -= 1.0f;
                 journeyLength = Vector3.Distance(path[curMarkerPassed].postition, path[curMarkerPassed + 1].postition);
             }
-           // transform.position = Vector3.Lerp(path[curMarkerPassed].postition, path[curMarkerPassed + 1].postition, JourneyDelta);
+            // transform.position = Vector3.Lerp(path[curMarkerPassed].postition, path[curMarkerPassed + 1].postition, JourneyDelta);
             transform.position = getPoint(JourneyDelta, curMarkerPassed);
         }
-        else
+        if (hp <= 0)
         {
-            //do killing stuff7
-            //jim put stuff here 
+            Destroy(gameObject);
         }
     }
 
