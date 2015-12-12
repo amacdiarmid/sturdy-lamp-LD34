@@ -2,6 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
+enum team
+{
+    Left = 9,
+    Right = 8,
+}
+
 public class Player : MonoBehaviour {
 
     public int Id = 0;
@@ -59,8 +65,37 @@ public class Player : MonoBehaviour {
                     var c = go.GetComponent<CreepAI>();
                     c.lane = ln;
                     c.path = ln.paths[Id];
+                    if (c.engineer != true)
+                    {
+                        if (Id == 0)
+                        {
+                            go.layer = (int)team.Left;
+                            c.EnemyMask = 1 << (int)team.Right;
+                            c.side = Id;
+                        }
+                        else
+                        {
+                            go.layer = (int)team.Right; 
+                            c.EnemyMask = 1 << (int)team.Left;
+                            c.side = Id;
+                        }
+                    }
+                    else
+                    {
+                        if (Id == 0)
+                        {
+                            go.layer = (int)team.Left;
+                            c.EnemyMask = 1 << (int)team.Left;
+                            c.side = Id;
+                        }
+                        else
+                        {
+                            go.layer = (int)team.Right;
+                            c.EnemyMask = 1 << (int)team.Right;
+                            c.side = Id;
+                        }
+                    }
                     ln.creepList[Id].push(c);
-                    go.layer = 8 + Id;
                     
                    
                     break;

@@ -29,6 +29,7 @@ public class CreepAI : MonoBehaviour
     protected Transform Trnsfrm;
     public int EnemyMask;
     public int side;
+    public bool engineer;
 
 
     // Use this for initialization
@@ -112,7 +113,7 @@ public class CreepAI : MonoBehaviour
             {
                 
                 //target->die mutha fucker
-                //Debug.Log("creep " +this.name +" pew creep " +creepTarget.name);
+                Debug.Log("creep " +this.name +" pew creep " +creepTarget.name);
                 creepTarget.hp -= damage;
                 FireTimer += rateOfFire;
                 otherTimer = rateOfFire + 0.5f;
@@ -120,7 +121,7 @@ public class CreepAI : MonoBehaviour
             else if (towerTarget != null)
             {
                 //target->die mutha fucker
-                //Debug.Log("creep " +this.name +" pew tower " +towerTarget.name);
+                Debug.Log("creep " +this.name +" pew tower " +towerTarget.name);
                 towerTarget.hp -= damage;
                 FireTimer += rateOfFire;
                 otherTimer = rateOfFire + 0.5f;

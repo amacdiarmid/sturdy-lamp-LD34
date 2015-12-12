@@ -40,7 +40,7 @@ public class Tower : MonoBehaviour
             if (target != null)
             {
                 //target->die mutha fucker
-                //Debug.Log("tower " + this.name +" pew creep " +target.name);
+                Debug.Log("tower " + this.name +" pew creep " +target.name);
                 target.hp -= damage;
                 FireTimer += rateOfFire;
             }
