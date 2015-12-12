@@ -6,6 +6,9 @@ public class laneMarker : MonoBehaviour {
 
     public List<pathMarker> path;
     public List<pathMarker> revPath;
+
+    public List<pathMarker>[] paths = new List<pathMarker>[2];
+
     public float totalDis;
 
     //0 for left to right, 1 for right to left
@@ -23,6 +26,8 @@ public class laneMarker : MonoBehaviour {
         revPath = new List<pathMarker>(path);
         revPath.Reverse();
 
+        paths[0] = path;
+        paths[1] = revPath;
     }
 	
 	// Update is called once per frame
