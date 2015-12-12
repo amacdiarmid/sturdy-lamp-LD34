@@ -22,6 +22,14 @@ public class Player : MonoBehaviour {
     };
     public List<SpawnEntry> Spawns = new List<SpawnEntry>();
 
+    [System.Serializable]
+    public class LaneEntry {
+        public KeyCode Key;
+       // public string Name;
+    };
+    public List<LaneEntry> Lanes = new List<LaneEntry>();
+    public int CurLane = 0;
+
     void Start() {
 
 
@@ -30,10 +38,17 @@ public class Player : MonoBehaviour {
     void Update() {
 
         Cash += BaseIncome * Time.deltaTime;
-        
-        if( (SpawnTimer -= Time.deltaTime) < 0 )
-            foreach( var se in Spawns ) {
-                if(Input.GetKeyDown(se.Key) && se.Cost < Cash ) {
+
+        for(int i = Lanes.Count; i-- > 0; ) {
+            var ln = Lanes[i];
+            if(Input.GetKeyDown(ln.Key)) {
+                CurLane = i;
+            }
+        }
+
+        if((SpawnTimer -= Time.deltaTime) < 0)
+            foreach(var se in Spawns) {
+                if(Input.GetKeyDown(se.Key) && se.Cost < Cash) {
                     Cash -= se.Cost;
                     Debug.Log("Player "+Id+"  spawn: "+se.Name);
                     SpawnTimer = SpawnDelay;
