@@ -14,8 +14,8 @@ public class CreepAI : MonoBehaviour {
     float lastCheck;
     public bool move;
     float distance;
-    CreepAI infrontCreep;
-    CreepAI behindCreep;
+    [HideInInspector] public CreepAI Next;
+    [HideInInspector] public CreepAI Prev;
     //attack stuff
     public float damage;
     public float range;
