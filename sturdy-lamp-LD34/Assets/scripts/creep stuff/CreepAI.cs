@@ -211,13 +211,13 @@ public class CreepAI : MonoBehaviour
                     d = mnD;
                     if (col.tag == "creep")
                     {
-                        Debug.Log("creep close");
+                        //Debug.Log("creep close");
                         creepTarget = col.GetComponent<CreepAI>();
                         towerTarget = null;
                     }
                     if (col.tag == "tower")
                     {
-                        Debug.Log("tower close");
+                        //Debug.Log("tower close");
                         towerTarget = col.GetComponent<Tower>();
                         creepTarget = null;
                     }
@@ -228,7 +228,7 @@ public class CreepAI : MonoBehaviour
             {
                 
                 //target->die mutha fucker
-                Debug.Log("creep " +this.name +" pew creep " +creepTarget.name);
+                //Debug.Log("creep " +this.name +" pew creep " +creepTarget.name);
                 creepTarget.hp -= damage;
                 FireTimer += rateOfFire;
                 otherTimer = rateOfFire + 0.5f;
@@ -236,7 +236,7 @@ public class CreepAI : MonoBehaviour
             else if (towerTarget != null)
             {
                 //target->die mutha fucker
-                Debug.Log("creep " +this.name +" pew tower " +towerTarget.name);
+                //Debug.Log("creep " +this.name +" pew tower " +towerTarget.name);
                 towerTarget.hp -= damage;
                 FireTimer += rateOfFire;
                 otherTimer = rateOfFire + 0.5f;

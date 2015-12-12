@@ -5,7 +5,7 @@ public class engineer : CreepAI {
 	
 	// Update is called once per frame
 	void Update () {
-        Debug.Log("update enginarrrr square");
+        //Debug.Log("update enginarrrr square");
         if ((FireTimer -= Time.deltaTime) < 0)
         {
             CreepAI creepTarget = null;
@@ -20,7 +20,7 @@ public class engineer : CreepAI {
                 {
                     if (col.tag == "tower" && col.GetComponent<Tower>().maxHP != col.GetComponent<Tower>().hp)
                     {
-                        Debug.Log("tower close");
+                        //Debug.Log("tower close");
                         towerTarget = col.GetComponent<Tower>();
                         creepTarget = null;
                     }
