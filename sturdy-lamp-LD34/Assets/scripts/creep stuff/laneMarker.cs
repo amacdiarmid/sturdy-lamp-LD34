@@ -5,8 +5,13 @@ using System.Collections.Generic;
 public class laneMarker : MonoBehaviour {
 
     public List<pathMarker> path;
+<<<<<<< HEAD
     public List<pathMarker> revPath;
 
+=======
+    public List<pathMarker> revPath;
+
+>>>>>>> refs/remotes/origin/master
     public List<pathMarker>[] paths = new List<pathMarker>[2];
 
     public float totalDis;
@@ -24,9 +29,15 @@ public class laneMarker : MonoBehaviour {
         creepList.Add(new CreepList());
         creepList.Add(new CreepList());
         revPath = new List<pathMarker>(path);
+<<<<<<< HEAD
         revPath.Reverse();
 
         paths[0] = path;
+=======
+        revPath.Reverse();
+
+        paths[0] = path;
+>>>>>>> refs/remotes/origin/master
         paths[1] = revPath;
     }
 	
