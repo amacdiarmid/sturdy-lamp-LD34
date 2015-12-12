@@ -30,12 +30,13 @@ public class CreepTest : MonoBehaviour {
         temp.GetComponent<CreepAI>().side = 0;
         node.GetComponent<laneMarker>().creepList[0].push(temp.GetComponent<CreepAI>());
 
+        /*
         temp = Instantiate(CreepRange);
         temp.layer = 8;
         temp.GetComponent<CreepAI>().lane = node.GetComponent<laneMarker>();
         temp.GetComponent<CreepAI>().path = temp.GetComponent<CreepAI>().lane.revPath;
         temp.GetComponent<CreepAI>().EnemyMask = 1 << 8;
         temp.GetComponent<CreepAI>().side = 0;
-        node.GetComponent<laneMarker>().creepList[1].push(temp.GetComponent<CreepAI>());
+        node.GetComponent<laneMarker>().creepList[1].push(temp.GetComponent<CreepAI>()); */
     }
 }

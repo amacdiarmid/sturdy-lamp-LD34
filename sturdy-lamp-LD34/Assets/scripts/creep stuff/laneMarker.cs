@@ -42,4 +42,17 @@ public class laneMarker : MonoBehaviour {
             //}
         }
     }
+
+    void OnDrawGizmos() {
+
+        int iters = 15; Vector2 lp = path[path.Count-1].transform.position;
+        for(int i = path.Count-1; i-- > 0; ) {
+            path[i].postition = path[i].transform.position;
+            for(int j = iters; j-- > 0; ) {
+                Vector2 p = CreepAI.getPoint((float)j / (float)iters, i, path);
+                Gizmos.DrawLine(lp, p);
+                lp =p;
+            }
+        }
+    }
 }
