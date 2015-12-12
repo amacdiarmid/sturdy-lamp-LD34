@@ -246,17 +246,22 @@ public class CreepAI : MonoBehaviour
                 FireTimer += 0.15f;
             }
         }
+        subUpdateCauseMyNamesArentGoodEnougthForjim();
+    }
 
+    protected void subUpdateCauseMyNamesArentGoodEnougthForjim()
+    {
         elUpdateDeMove();
 
-        Vector3 p  = Vector2.Lerp(Trnsfrm.position, DesPos, 4.0f *Time.deltaTime);
+        Vector3 p = Vector2.Lerp(Trnsfrm.position, DesPos, 4.0f * Time.deltaTime);
         p.z = p.y + 20.0f;
         Trnsfrm.position = p;
 
         if (hp <= 0)
         {
-         //   Destroy(gameObject);
+            Destroy(gameObject);
         }
+
     }
 
     void OnDrawGizmos()
