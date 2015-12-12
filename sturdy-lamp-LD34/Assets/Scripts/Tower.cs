@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Tower : MonoBehaviour {
+public class Tower : MonoBehaviour
+{
 
-    public float Dmg = 1;
-    public float Range = 10;
-    public float RoF = 1;
+    public float damage;
+    public float range;
+    public float rateOfFire;
+    public float hp;
+    public float maxHP;
 
     public LayerMask EnemyMask;
 
@@ -13,30 +16,42 @@ public class Tower : MonoBehaviour {
 
     Transform Trnsfrm;
 
-    void Start() {
+    void Start()
+    {
         Trnsfrm = transform;
 
     }
 
-    void Update() {
-        if((FireTimer -= Time.deltaTime) < 0) {
+    void Update()
+    {
+        if ((FireTimer -= Time.deltaTime) < 0)
+        {
             CreepAI target = null; float mnD = float.MaxValue;
-            foreach(var col in Physics2D.OverlapCircleAll(Trnsfrm.position, Range, EnemyMask.value)) {
+            foreach (var col in Physics2D.OverlapCircleAll(Trnsfrm.position, range, EnemyMask.value))
+            {
 
                 float d = (col.transform.position - Trnsfrm.position).sqrMagnitude;
-                if(d < mnD) {
+                if (d < mnD)
+                {
                     d = mnD;
                     target = col.GetComponent<CreepAI>();
                 }
             }
-            if(target != null ) {
+            if (target != null)
+            {
                 //target->die mutha fucker
-                Debug.Log("pew");
-                target.hp -= Dmg;
-                FireTimer += RoF;
-            } else {
+                //Debug.Log("tower " + this.name +" pew creep " +target.name);
+                target.hp -= damage;
+                FireTimer += rateOfFire;
+            }
+            else
+            {
                 FireTimer += 0.15f;
             }
+        }
+        if (hp <= 0)
+        {
+            Destroy(gameObject);
         }
     }
 
