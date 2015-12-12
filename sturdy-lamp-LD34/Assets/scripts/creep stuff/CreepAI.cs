@@ -62,18 +62,22 @@ public class CreepAI : MonoBehaviour
         Vector2 M0, M1, M2, M3;
     };
 
-    protected Vector2 getPoint(float t, int i2)
-    {
+
+    static public Vector2 getPoint( float t, int i2, List<pathMarker> path ) {
         int i1 = i2 - 1, i3 = i2 + 1, i4 = i2 + 2;
         Vector2 p2 = path[i2].postition, p3 = path[i3].postition, p1, p4;
-        if (i1 < 0) p1 = p2 + p2 - p3;
+        if(i1 < 0) p1 = p2 + p2 - p3;
         else p1 = path[i1].postition;
-        if (i4 >= path.Count) p4 = p3 + p3 - p2;
+        if(i4 >= path.Count) p4 = p3 + p3 - p2;
         else p4 = path[i4].postition;
 
         //t *= 0.25f; t+= 0.25f;
         CubicSpline s = new CubicSpline(p1, p2, p3, p4);
         return s.get(t);
+    }
+
+    protected Vector2 getPoint(float t, int i2) {
+        return getPoint(t, i2, path);
     }
 
     // Update is called once per frame
@@ -130,19 +134,24 @@ public class CreepAI : MonoBehaviour
                 FireTimer += 0.15f;
             }
         }
-        if ((otherTimer -= Time.deltaTime) < 0)
-        {
-            if (Next != null)
-            {
-                if (curMarkerPassed > Next.curMarkerPassed || (curMarkerPassed == Next.curMarkerPassed && JourneyDelta > Next.JourneyDelta))
-                {
+        if((otherTimer -= Time.deltaTime) < 0) {
+            if(Next != null) {
+                if(curMarkerPassed > Next.curMarkerPassed || (curMarkerPassed == Next.curMarkerPassed && JourneyDelta > Next.JourneyDelta)) {
                     lane.creepList[side].swap(this, Next);
                 }
             }
-            //do killing stuff7
-            distance = Vector3.Distance(transform.position, path[curMarkerPassed + 1].transform.position);
-            for (int i = curMarkerPassed + 1; i < path.Count; i++)
-            {
+
+            for(; ; ) {
+
+
+
+                break;
+            }
+
+
+                //do killing stuff7
+                distance = Vector3.Distance(transform.position, path[curMarkerPassed + 1].transform.position);
+            for(int i = curMarkerPassed + 1; i < path.Count; i++) {
                 distance += Vector3.Distance(path[i - i].transform.position, path[i].transform.position);
             }
 
@@ -172,6 +181,8 @@ public class CreepAI : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(path[curMarkerPassed].postition, path[curMarkerPassed + 1].postition);
+
+        Gizmos.DrawWireSphere(transform.position, range);
     }
 
     public int getCurMarker() { return curMarkerPassed; }
