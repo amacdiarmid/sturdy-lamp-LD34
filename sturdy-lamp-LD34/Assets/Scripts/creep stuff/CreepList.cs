@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+[System.Serializable]
 public class CreepList  {
 
-    CreepAI First = null, Last = null;
+    public CreepAI First = null, Last = null;
 
     public void push( CreepAI c ) {
         if(c.Next != null) Debug.LogError("err");
