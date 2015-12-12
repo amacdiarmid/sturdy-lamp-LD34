@@ -5,15 +5,16 @@ using System.Collections.Generic;
 public class CreepAI : MonoBehaviour {
 
     //path staff
+    public laneMarker lane;
     public List<pathMarker> path;
     float startTime;
     float journeyLength;
     int curMarkerPassed = 0;
-    public float speed;
+    public float speed = 1;
     [Range(0, 1)] float attackCheck = 0.1f;
     float lastCheck;
     public bool move;
-    float distance;
+    [HideInInspector] public float distance;
     [HideInInspector] public CreepAI Next;
     [HideInInspector] public CreepAI Prev;
     //attack stuff
@@ -36,6 +37,12 @@ public class CreepAI : MonoBehaviour {
     {
         if (move == true)
         {
+            distance = Vector3.Distance(transform.position, path[curMarkerPassed + 1].transform.position);
+            for (int i = curMarkerPassed + 1; i < path.Count; i++)
+            {
+                distance += Vector3.Distance(path[i - i].transform.position, path[i].transform.position);
+            }
+
             float distCovered = (Time.time - startTime) * speed;
             float fracJourney = distCovered / journeyLength;
             transform.position = Vector3.Lerp(path[curMarkerPassed].postition, path[curMarkerPassed + 1].postition, fracJourney);
@@ -54,8 +61,5 @@ public class CreepAI : MonoBehaviour {
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(path[curMarkerPassed].postition, path[curMarkerPassed + 1].postition);
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, (path[curMarkerPassed + 1].postition - transform.position).normalized);
     }
 }
