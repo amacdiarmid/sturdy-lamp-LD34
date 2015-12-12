@@ -34,7 +34,7 @@ public class CreepTest : MonoBehaviour {
         temp.layer = 8;
         temp.GetComponent<CreepAI>().lane = node.GetComponent<laneMarker>();
         temp.GetComponent<CreepAI>().path = temp.GetComponent<CreepAI>().lane.revPath;
-        temp.GetComponent<CreepAI>().EnemyMask = 1 << 9;
+        temp.GetComponent<CreepAI>().EnemyMask = 1 << 8;
         temp.GetComponent<CreepAI>().side = 0;
         node.GetComponent<laneMarker>().creepList[1].push(temp.GetComponent<CreepAI>());
     }
