@@ -17,7 +17,7 @@ public class Player : MonoBehaviour {
     [System.Serializable]
     public class SpawnEntry {
         public KeyCode Key;
-        public string Name;
+        public GameObject Fab;
         public float Cost;
     };
     public List<SpawnEntry> Spawns = new List<SpawnEntry>();
@@ -25,6 +25,7 @@ public class Player : MonoBehaviour {
     [System.Serializable]
     public class LaneEntry {
         public KeyCode Key;
+        public laneMarker Lane;
        // public string Name;
     };
     public List<LaneEntry> Lanes = new List<LaneEntry>();
@@ -50,8 +51,18 @@ public class Player : MonoBehaviour {
             foreach(var se in Spawns) {
                 if(Input.GetKeyDown(se.Key) && se.Cost < Cash) {
                     Cash -= se.Cost;
-                    Debug.Log("Player "+Id+"  spawn: "+se.Name);
+                    Debug.Log("Player "+Id+"  spawn: ");
                     SpawnTimer = SpawnDelay;
+
+                    var ln = Lanes[CurLane].Lane;
+                    var go = Instantiate(se.Fab);
+                    var c = go.GetComponent<CreepAI>();
+                    c.lane = ln;
+                    c.path = ln.paths[Id];
+                    ln.creepList[Id].push(c);
+                    go.layer = 8 + Id;
+                    
+                   
                     break;
                 }
             }
