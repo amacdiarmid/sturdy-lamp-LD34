@@ -20,6 +20,8 @@ public class Player : MonoBehaviour {
 
     float SpawnTimer = -1;
 
+    public List<GameObject> laneKeyIcons;
+
     [System.Serializable]
     public class SpawnEntry {
         public KeyCode Key;
@@ -57,6 +59,11 @@ public class Player : MonoBehaviour {
             var ln = Lanes[i];
             if(Input.GetKeyDown(ln.Key)) {
                 CurLane = i;
+                foreach (var icon in laneKeyIcons)
+                {
+                    icon.transform.localScale = new Vector3(0.25f, 0.25f, 1.0f);//set default scale
+                }
+                laneKeyIcons[i].transform.localScale = new Vector3(0.5f, 0.5f, 1.0f); // set selected scale here    
             }
         }
 
