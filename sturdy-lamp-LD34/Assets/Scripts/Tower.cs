@@ -1,40 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Tower : MonoBehaviour
+public class Tower : Health
 {
-
-    public float damage;
-    public float range;
-    public float rateOfFire;
-    public float hp;
-    public float maxHP;
-
-    public LayerMask EnemyMask;
-
     float FireTimer = 0.5f;
-
     Transform Trnsfrm;
 
     void Start()
     {
         Trnsfrm = transform;
-
     }
 
     void Update()
     {
         if ((FireTimer -= Time.deltaTime) < 0)
         {
-            CreepAI target = null; float mnD = float.MaxValue;
+            Health target = null; float mnD = float.MaxValue;
             foreach (var col in Physics2D.OverlapCircleAll(Trnsfrm.position, range, EnemyMask.value))
             {
 
                 float d = (col.transform.position - Trnsfrm.position).sqrMagnitude;
-                if (d < mnD)
+                if (d < mnD && col.tag != "tower")
                 {
                     d = mnD;
-                    target = col.GetComponent<CreepAI>();
+                    target = col.GetComponent<Health>();
                 }
             }
             if (target != null)

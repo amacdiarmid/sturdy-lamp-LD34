@@ -2,45 +2,56 @@
 using System.Collections;
 
 public class engineer : CreepAI {
-	
-	// Update is called once per frame
-	void Update () {
+
+    public float repairAmout;
+    public float repairRange;
+    public float repairRateOfFire;
+
+    // Update is called once per frame
+    void Update () {
+		if (checkedRepair() == false)
+		{
+			checkAttack();
+		}
+        subUpdateCauseMyNamesArentGoodEnougthForjim();
+    }
+
+    bool checkedRepair()
+    {
         //Debug.Log("update enginarrrr square");
         if ((FireTimer -= Time.deltaTime) < 0)
         {
-            CreepAI creepTarget = null;
-            Tower towerTarget = null;
+            Health target = null;
             float mnD = float.MaxValue;
-
-            foreach (var col in Physics2D.OverlapCircleAll(Trnsfrm.position, range, EnemyMask))
+			Debug.Log(this.gameObject.layer);
+            foreach (var col in Physics2D.OverlapCircleAll(Trnsfrm.position, repairRange, 1<<this.gameObject.layer))
             {
-                //Debug.Log(col.name);
+                Debug.Log(col.name);
                 float d = (col.transform.position - Trnsfrm.position).sqrMagnitude;
                 if (d < mnD)
                 {
                     if (col.tag == "tower" && col.GetComponent<Tower>().maxHP != col.GetComponent<Tower>().hp)
                     {
                         //Debug.Log("tower close");
-                        towerTarget = col.GetComponent<Tower>();
-                        creepTarget = null;
+                        target = col.GetComponent<Health>();
                     }
-                    creepTarget = col.GetComponent<CreepAI>();
                 }
             }
-            if (towerTarget != null)
+            if (target != null)
             {
                 //target->die mutha fucker
                 //Debug.Log("creep " +this.name +" pew tower " +towerTarget.name);
-                towerTarget.hp += damage;
-                FireTimer += rateOfFire;
-                otherTimer = rateOfFire + 0.5f;
+                target.hp += repairAmout;
+                FireTimer += repairRateOfFire;
+                otherTimer = repairRateOfFire + 0.5f;
+				return true;
             }
             else
             {
                 FireTimer += 0.15f;
+				return false;
             }
         }
-        subUpdateCauseMyNamesArentGoodEnougthForjim();
+		return false;
     }
-
 }

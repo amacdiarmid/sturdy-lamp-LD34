@@ -2,38 +2,31 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class CreepAI : MonoBehaviour
+public class CreepAI : Health
 {
 
-    int SubLaneCnt = 5;
-    public int SubLane  = 0;
+	[HideInInspector] int SubLaneCnt = 5;
+	[HideInInspector] public int SubLane  = 0;
 
-    //path staff
-    public laneMarker lane;
-    public List<pathMarker> path;
-    //float startTime;
-    protected float JourneyDelta;
-    public  float journeyDis;
-    protected float journeyLength;
-    protected int curMarkerPassed = 0;
+	//path staff
+	[HideInInspector] public laneMarker lane;
+	[HideInInspector] public List<pathMarker> path;
+	//float startTime;
+	protected float JourneyDelta;
+	[HideInInspector] public float journeyDis;
+	protected float journeyLength;
+	protected int curMarkerPassed = 0;
     public float speed = 1;
-    [Range(0, 1)] protected float attackCheck = 0.1f;
-    protected float lastCheck;
-    public bool move;
+	protected float lastCheck;
+	[HideInInspector] public bool move;
     [HideInInspector] public float distance;
     [HideInInspector] public CreepAI Next;
     [HideInInspector] public CreepAI Prev;
     //attack stuff
-    public float damage;
-    public float range;
-    public float hp;
-    public float rateOfFire;
     protected float FireTimer = 0.5f;
     protected float otherTimer = -1f;
     protected Transform Trnsfrm;
-    public int EnemyMask;
-    public int side;
-    public bool engineer;
+	[HideInInspector] public int side;
 
 
     // Use this for initialization
@@ -89,10 +82,10 @@ public class CreepAI : MonoBehaviour
 
     Vector2 DesPos;
 
-    public List<float> Cd;
-    public float MxD;
+	[HideInInspector] public List<float> Cd;
+	[HideInInspector] public float MxD;
 
-    float laneTimer = 0;
+	[HideInInspector] float laneTimer = 0;
     void elUpdateDeMove() {
 
         if((otherTimer -= Time.deltaTime) < 0) {
@@ -195,61 +188,46 @@ public class CreepAI : MonoBehaviour
 
     void Update()
     {
-        if ((FireTimer -= Time.deltaTime) < 0)
-        {
-            CreepAI creepTarget = null;
-            Tower towerTarget = null;
-            float mnD = float.MaxValue;
-      
-            foreach (var col in Physics2D.OverlapCircleAll(Trnsfrm.position, range, EnemyMask))
-            {
-                //Debug.Log(col.name);
-                float d = (col.transform.position - Trnsfrm.position).sqrMagnitude;
-                if (d < mnD)
-                {
-                    
-                    d = mnD;
-                    if (col.tag == "creep")
-                    {
-                        //Debug.Log("creep close");
-                        creepTarget = col.GetComponent<CreepAI>();
-                        towerTarget = null;
-                    }
-                    if (col.tag == "tower")
-                    {
-                        //Debug.Log("tower close");
-                        towerTarget = col.GetComponent<Tower>();
-                        creepTarget = null;
-                    }
-                    creepTarget = col.GetComponent<CreepAI>();
-                }
-            }
-            if (creepTarget != null)
-            {
-                
-                //target->die mutha fucker
-                //Debug.Log("creep " +this.name +" pew creep " +creepTarget.name);
-                creepTarget.hp -= damage;
-                FireTimer += rateOfFire;
-                otherTimer = rateOfFire + 0.5f;
-            }
-            else if (towerTarget != null)
-            {
-                //target->die mutha fucker
-                //Debug.Log("creep " +this.name +" pew tower " +towerTarget.name);
-                towerTarget.hp -= damage;
-                FireTimer += rateOfFire;
-                otherTimer = rateOfFire + 0.5f;
-            }
-            else
-            {
-                FireTimer += 0.15f;
-            }
-        }
-        subUpdateCauseMyNamesArentGoodEnougthForjim();
+		if ((FireTimer -= Time.deltaTime) < 0)
+		{
+			Health target = null;
+			float mnD = float.MaxValue;
+			Debug.Log(EnemyMask.value);
+			foreach (var col in Physics2D.OverlapCircleAll(Trnsfrm.position, range, EnemyMask.value))
+			{
+				//Debug.Log(col.name);
+				float d = (col.transform.position - Trnsfrm.position).sqrMagnitude;
+				if (d < mnD)
+				{
+					d = mnD;
+					//Debug.Log("creep close");
+					target = col.GetComponent<Health>();
+				}
+			}
+			if (target != null)
+			{
+
+				//target->die mutha fucker
+				//Debug.Log("creep " +this.name +" pew " +target.name);
+				target.hp -= damage;
+				FireTimer += rateOfFire;
+				otherTimer = rateOfFire + 0.5f;
+			}
+			else
+			{
+				FireTimer += 0.15f;
+			}
+		}
+		subUpdateCauseMyNamesArentGoodEnougthForjim();
     }
 
-    protected void subUpdateCauseMyNamesArentGoodEnougthForjim()
+    protected void checkAttack()
+    {
+		
+
+	}
+
+	protected void subUpdateCauseMyNamesArentGoodEnougthForjim()
     {
         elUpdateDeMove();
 

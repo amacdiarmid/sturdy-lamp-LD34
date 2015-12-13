@@ -65,39 +65,18 @@ public class Player : MonoBehaviour {
                     var c = go.GetComponent<CreepAI>();
                     c.lane = ln;
                     c.path = ln.paths[Id];
-                    if (c.engineer != true)
+                    if (Id == 0)
                     {
-                        if (Id == 0)
-                        {
-                            go.layer = (int)team.Left;
-                            c.EnemyMask = 1 << (int)team.Right;
-                            c.side = Id;
-                        }
-                        else
-                        {
-                            go.layer = (int)team.Right; 
-                            c.EnemyMask = 1 << (int)team.Left;
-                            c.side = Id;
-                        }
+                        go.layer = (int)team.Left;
+                        c.EnemyMask = 1 << (int)team.Right;
+                        c.side = Id;
                     }
                     else
                     {
-                        if (Id == 0)
-                        {
-                            go.layer = (int)team.Left;
-                            c.EnemyMask = 1 << (int)team.Left;
-                            c.side = Id;
-                        }
-                        else
-                        {
-                            go.layer = (int)team.Right;
-                            c.EnemyMask = 1 << (int)team.Right;
-                            c.side = Id;
-                        }
+                        go.layer = (int)team.Right; 
+                        c.EnemyMask = 1 << (int)team.Left;
+                        c.side = Id;
                     }
-                    ln.creepList[Id].push(c);
-                    
-                   
                     break;
                 }
             }
