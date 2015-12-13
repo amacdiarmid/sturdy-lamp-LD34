@@ -35,12 +35,17 @@ public class CreepAI : MonoBehaviour
     public int side;
     public bool engineer;
 
-
+    void sortLayer() {
+        int so = SubLane;
+        if(side != 0) SubLane = SubLaneCnt-SubLane-1;
+        GetComponentInChildren<SpriteRenderer>().sortingOrder = so;
+    }
     // Use this for initialization
     void Start()
     {
         journeyDis = 0;
         SubLane = Random.Range(0, SubLaneCnt);
+        sortLayer();
         Trnsfrm = transform;
         //startTime = Time.time;
         JourneyDelta = 0;
@@ -96,71 +101,72 @@ public class CreepAI : MonoBehaviour
     void elUpdateDeMove() {
 
         if((otherTimer -= Time.deltaTime) < 0) {
-            if(Next != null) {
+         //   if(Next != null) {
                 //if(curMarkerPassed > Next.curMarkerPassed || (curMarkerPassed == Next.curMarkerPassed && JourneyDelta > Next.JourneyDelta)) {
-                
 
+            if(Bounce >= 1.0f) Bounce -= 1.0f;
 
-                float[] cd = new float[SubLaneCnt]; 
-                for(int i = SubLaneCnt; i-- >0; ) cd[i] = float.MaxValue;
-                //var n = Next;
+            float[] cd = new float[SubLaneCnt]; 
+            for(int i = SubLaneCnt; i-- >0; ) cd[i] = float.MaxValue;
+            //var n = Next;
 
+            float colRad = 1.0f;
+            //for(int i = SubLaneCnt*2; i-- >0; ) {
+            foreach(var col in Physics2D.OverlapCircleAll(Trnsfrm.position, colRad*1.2f, 1<<gameObject.layer)) {
+                if( col.gameObject == gameObject  ) continue;
+                CreepAI n = col.GetComponent<CreepAI>();
+                if( n == null ) continue;
+                if(n.journeyDis < journeyDis) continue;
+                // if(n.journeyDis < journeyDis-0.25f ) {
+                //     lane.creepList[side].swap(this, n);
 
-                //for(int i = SubLaneCnt*2; i-- >0; ) {
-                foreach (var col in Physics2D.OverlapCircleAll(Trnsfrm.position, 1.0f, 1<<gameObject.layer )) {
-                    if( col.gameObject == gameObject  ) continue;
-                    CreepAI n = col.GetComponent<CreepAI>();
-                    if( n == null ) continue;
-                    if(n.journeyDis < journeyDis) continue;
-                   // if(n.journeyDis < journeyDis-0.25f ) {
-                   //     lane.creepList[side].swap(this, n);
+                // } else {
 
-                   // } else {
+                    //float d = (Trnsfrm.position - n.Trnsfrm.position).sqrMagnitude;
+                    float d = n.journeyDis - journeyDis;
 
-                        //float d = (Trnsfrm.position - n.Trnsfrm.position).sqrMagnitude;
-                        float d = n.journeyDis - journeyDis;
-
-                        if(cd[n.SubLane] >d) {
-                            cd[n.SubLane] = d;
-                        }
-
-                      //  if(d > 2.25f) break;
-                  //  }
-                    //n = n.Next;
-                  //  if(n == null) break;
-                }
-
-                float mxD = float.MinValue; int ci = SubLane;
-                if( (laneTimer -= Time.deltaTime) < 0) {
-                    Cd = new List<float>();
-                    //for(int i = SubLaneCnt; i-- >0; ) {
-
-                    for(int i = 0; i < SubLaneCnt; i++) {
-                        float d = cd[i];
-                        //                    Cd.Add(d);
-                        if(d == float.MaxValue) {
-                            d = 5.0f - Mathf.Abs(i-SubLane);
-                        }
-                        Cd.Add(d);
-                        if(d > mxD) {
-                            mxD = d;
-                            ci = i;
-                        }
+                    if(cd[n.SubLane] >d) {
+                        cd[n.SubLane] = d;
                     }
-                    MxD = mxD;
-                    if(mxD < 0.5f) {
-                        laneTimer = 0.1f;
-                        return;
-                    }
-                    if(SubLane != ci) {
-                        SubLane = ci;
-                        laneTimer = 0.8f;
-                    } else  laneTimer = 0.1f;
-                } else {
-                    if(cd[SubLane] < 0.5f) return;
-                    laneTimer = 0.1f;
-                }
+
+                    //  if(d > 2.25f) break;
+                //  }
+                //n = n.Next;
+                //  if(n == null) break;
             }
+
+            float mxD = float.MinValue; int ci = SubLane;
+            if( (laneTimer -= Time.deltaTime) < 0) {
+                Cd = new List<float>();
+                //for(int i = SubLaneCnt; i-- >0; ) {
+
+                for(int i = 0; i < SubLaneCnt; i++) {
+                    float d = cd[i];
+                    //                    Cd.Add(d);
+                    if(d == float.MaxValue) {
+                        d = 5.0f - Mathf.Abs(i-SubLane);
+                    }
+                    Cd.Add(d);
+                    if(d > mxD) {
+                        mxD = d;
+                        ci = i;
+                    }
+                }
+                MxD = mxD;
+                if(mxD < colRad) {
+                    laneTimer = 0.1f;
+                    return;
+                }
+                if(SubLane != ci) {
+                    SubLane = ci;
+                    laneTimer = 0.8f;
+                    sortLayer();
+                } else  laneTimer = 0.1f;
+            } else {
+                if(cd[SubLane] < colRad) return;
+                laneTimer = 0.1f;
+            }
+           // }
 
            
 
@@ -187,16 +193,22 @@ public class CreepAI : MonoBehaviour
             // transform.position = Vector3.Lerp(path[curMarkerPassed].postition, path[curMarkerPassed + 1].postition, JourneyDelta);
             DesPos = getPoint(JourneyDelta, curMarkerPassed);
 
-            DesPos += (Vector2)Vector3.Cross( path[curMarkerPassed].postition- path[curMarkerPassed + 1].postition,Vector3.back).normalized  *((float)SubLane/(float)SubLaneCnt -0.5f)*0.8f;
+            DesPos += (Vector2)Vector3.Cross( path[curMarkerPassed].postition- path[curMarkerPassed + 1].postition,Vector3.back).normalized  *((float)SubLane/(float)SubLaneCnt -0.5f)*2.5f;
         }
 
         
     }
 
+
+    float AttackTimer = -1;
+    Transform Target;
+    Vector3 AttkPos;
     void Update()
     {
         if ((FireTimer -= Time.deltaTime) < 0)
         {
+            Target = null;
+            AttackTimer = -1;
             CreepAI creepTarget = null;
             Tower towerTarget = null;
             float mnD = float.MaxValue;
@@ -222,6 +234,10 @@ public class CreepAI : MonoBehaviour
                         creepTarget = null;
                     }
                     creepTarget = col.GetComponent<CreepAI>();
+
+                    Target = col.transform;
+                    AttackTimer = rateOfFire*0.2f;
+                    AttkPos = Target.position;
                 }
             }
             if (creepTarget != null)
@@ -249,12 +265,32 @@ public class CreepAI : MonoBehaviour
         subUpdateCauseMyNamesArentGoodEnougthForjim();
     }
 
+    float Bounce = 0;
+   
+
     protected void subUpdateCauseMyNamesArentGoodEnougthForjim()
     {
+
+        if(Bounce < 1.0f )
+            Bounce += Time.deltaTime*4.5f;
+        //if(Bounce >1.0f) Bounce -= 1.0f;
+
+        
+
         elUpdateDeMove();
 
-        Vector3 p = Vector2.Lerp(Trnsfrm.position, DesPos, 4.0f * Time.deltaTime);
-        p.z = p.y + 20.0f;
+        Vector3 p = Vector2.Lerp(Trnsfrm.position, DesPos, 5.0f * Time.deltaTime);
+       // p.z = p.y + 20.0f;
+        p.y += Mathf.Sin(Bounce*Mathf.PI) *0.15f;
+
+        if((AttackTimer-= Time.deltaTime) > 0) {
+            if(Target) AttkPos = Target.position;
+            float mod = 1.0f-Mathf.Sin(Mathf.PI *(AttackTimer / (rateOfFire*0.2f)));
+            p = Vector3.Lerp(p, AttkPos, mod);
+            float ang = -35; if(side != 0) ang = -ang;
+            Trnsfrm.localEulerAngles = new Vector3(0, 0, ang*mod);
+        } else Trnsfrm.localEulerAngles = Vector3.zero;
+
         Trnsfrm.position = p;
 
         if (hp <= 0)
