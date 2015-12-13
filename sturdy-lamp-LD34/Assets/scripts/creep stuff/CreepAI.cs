@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class CreepAI : MonoBehaviour
 {
 
-    int SubLaneCnt = 5;
+    public static int SubLaneCnt =5;
     public int SubLane  = 0;
 
     //path staff
@@ -29,7 +29,7 @@ public class CreepAI : MonoBehaviour
     public float hp;
     public float rateOfFire;
     protected float FireTimer = 0.5f;
-    protected float otherTimer = -1f;
+    public float otherTimer = -1f;
     protected Transform Trnsfrm;
     public int EnemyMask;
     public int side;
@@ -45,6 +45,7 @@ public class CreepAI : MonoBehaviour
     {
         journeyDis = 0;
         SubLane = Random.Range(0, SubLaneCnt);
+        BounceMod = Random.Range(0.9f, 1.1f);
         sortLayer();
         Trnsfrm = transform;
         //startTime = Time.time;
@@ -266,18 +267,20 @@ public class CreepAI : MonoBehaviour
     }
 
     float Bounce = 0;
-   
+    float BounceMod = 1;
 
     protected void subUpdateCauseMyNamesArentGoodEnougthForjim()
     {
 
         if(Bounce < 1.0f )
-            Bounce += Time.deltaTime*4.5f;
+            Bounce += Time.deltaTime*4.5f * BounceMod;
         //if(Bounce >1.0f) Bounce -= 1.0f;
 
         
 
         elUpdateDeMove();
+
+        if(Bounce > 1.0f) Bounce = 1.0f;
 
         Vector3 p = Vector2.Lerp(Trnsfrm.position, DesPos, 5.0f * Time.deltaTime);
        // p.z = p.y + 20.0f;
@@ -285,7 +288,7 @@ public class CreepAI : MonoBehaviour
 
         if((AttackTimer-= Time.deltaTime) > 0) {
             if(Target) AttkPos = Target.position;
-            float mod = 1.0f-Mathf.Sin(Mathf.PI *(AttackTimer / (rateOfFire*0.2f)));
+            float mod = 1.0f-Mathf.Abs(Mathf.Cos(Mathf.PI *(AttackTimer / (rateOfFire*0.2f))));
             p = Vector3.Lerp(p, AttkPos, mod);
             float ang = -35; if(side != 0) ang = -ang;
             Trnsfrm.localEulerAngles = new Vector3(0, 0, ang*mod);

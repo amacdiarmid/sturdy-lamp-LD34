@@ -32,9 +32,16 @@ public class Player : MonoBehaviour {
     public class LaneEntry {
         public KeyCode Key;
         public laneMarker Lane;
+
+
+        public List<Waypoint> Waypoints = new List<Waypoint>();
        // public string Name;
     };
     public List<LaneEntry> Lanes = new List<LaneEntry>();
+    public List<KeyCode> WaypointKeys = new List<KeyCode>();
+
+
+
     public int CurLane = 0;
 
     void Start() {
@@ -53,6 +60,14 @@ public class Player : MonoBehaviour {
             }
         }
 
+        var cl = Lanes[CurLane];
+        for(int i = Mathf.Min( cl.Waypoints.Count, WaypointKeys.Count ); i-- > 0; ) {
+             if(Input.GetKeyDown(WaypointKeys[i]) ) {
+                 var go = cl.Waypoints[i].gameObject;
+                 go.SetActive( !go.activeSelf);
+             }
+        }
+
         if((SpawnTimer -= Time.deltaTime) < 0)
             foreach(var se in Spawns) {
                 if(Input.GetKeyDown(se.Key) && se.Cost < Cash) {
@@ -65,39 +80,30 @@ public class Player : MonoBehaviour {
                     var c = go.GetComponent<CreepAI>();
                     c.lane = ln;
                     c.path = ln.paths[Id];
-                    if (c.engineer != true)
-                    {
-                        if (Id == 0)
-                        {
+                    if(c.engineer != true) {
+                        if(Id == 0) {
                             go.layer = (int)team.Left;
                             c.EnemyMask = 1 << (int)team.Right;
                             c.side = Id;
-                        }
-                        else
-                        {
-                            go.layer = (int)team.Right; 
+                        } else {
+                            go.layer = (int)team.Right;
                             c.EnemyMask = 1 << (int)team.Left;
                             c.side = Id;
                         }
-                    }
-                    else
-                    {
-                        if (Id == 0)
-                        {
+                    } else {
+                        if(Id == 0) {
                             go.layer = (int)team.Left;
                             c.EnemyMask = 1 << (int)team.Left;
                             c.side = Id;
-                        }
-                        else
-                        {
+                        } else {
                             go.layer = (int)team.Right;
                             c.EnemyMask = 1 << (int)team.Right;
                             c.side = Id;
                         }
                     }
                     ln.creepList[Id].push(c);
-                    
-                   
+
+
                     break;
                 }
             }
